@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Presente para ti! 😁😘</title>
+    <title>Faz um Pix aí! 😂</title>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💰</text></svg>">
 
@@ -23,7 +23,7 @@
             margin: 0;
             background-color: #f7f7f7;
             text-align: center;
-            overflow: hidden;
+            overflow: hidden; /* Evita que a tela role quando o botão foge */
             touch-action: manipulation;
         }
 
@@ -36,7 +36,6 @@
             width: 90%;
             z-index: 10;
             position: relative;
-            transition: all 0.3s ease;
         }
 
         #tela-pagamento {
@@ -61,7 +60,7 @@
             justify-content: center;
             align-items: center;
             position: relative;
-            height: 120px; /* Aumentado para dar espaço ao crescimento do botão */
+            height: 80px; /* Aumentado para facilitar no celular */
         }
 
         .btn {
@@ -71,16 +70,16 @@
             font-size: 1.1em;
             font-weight: bold;
             cursor: pointer;
-            transition: transform 0.2s, font-size 0.2s;
+            transition: 0.1s;
             text-decoration: none;
             display: inline-block;
-            touch-action: none;
+            touch-action: none; /* Importante para o botão fujão */
         }
 
         #btn-sim {
             background-color: #28a745;
             color: white;
-            z-index: 11;
+            margin-right: 60px; /* Espaço para o botão Não não sobrepor */
         }
 
         #btn-pagar {
@@ -93,6 +92,7 @@
             background-color: #dc3545;
             color: white;
             position: absolute;
+            right: 10%; /* Posicionamento inicial mais seguro */
         }
 
         .confetti {
@@ -112,7 +112,7 @@
 
     <div class="container" id="tela-pergunta">
         <h1>Me manda um pix de 10 aí? 🥺</h1>
-        <img src="foto.png" alt="Foto" class="imagem-meio">
+        <img src="foto.jpg" alt="Foto" class="imagem-meio">
         <div class="buttons-wrapper">
             <button id="btn-sim" class="btn">Sim</button>
             <button id="btn-nao" class="btn">Não</button>
@@ -132,37 +132,26 @@
         const telaPergunta = document.getElementById('tela-pergunta');
         const telaPagamento = document.getElementById('tela-pagamento');
 
-        let simTamanho = 1;
-        let naoTamanho = 1;
-
-        function fogeEAltera() {
-            // Fuga do botão
+        function foge() {
+            // Calcula limites para o botão não sair totalmente da tela visível
             const larguraTela = window.innerWidth - btnNao.offsetWidth;
             const alturaTela = window.innerHeight - btnNao.offsetHeight;
+
             const novoX = Math.random() * larguraTela;
             const novoY = Math.random() * alturaTela;
 
             btnNao.style.position = 'fixed';
             btnNao.style.left = novoX + 'px';
             btnNao.style.top = novoY + 'px';
-
-            // Faz o SIM aumentar e o NÃO diminuir
-            simTamanho += 0.2;
-            naoTamanho -= 0.05;
-
-            btnSim.style.transform = `scale(${simTamanho})`;
-            btnNao.style.transform = `scale(${naoTamanho})`;
-
-            // Se o "Não" ficar muito pequeno, ele some
-            if (naoTamanho < 0.3) {
-                btnNao.style.display = 'none';
-            }
         }
 
-        btnNao.addEventListener('mouseover', fogeEAltera);
+        // Funciona no computador (Passar o mouse)
+        btnNao.addEventListener('mouseover', foge);
+        
+        // Funciona no celular (Encostar o dedo)
         btnNao.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            fogeEAltera();
+            e.preventDefault(); // Impede o clique acidental
+            foge();
         });
 
         btnSim.addEventListener('click', () => {
@@ -181,5 +170,6 @@
             setTimeout(() => confetti.remove(), 3000);
         }
     </script>
+
 </body>
 </html>
