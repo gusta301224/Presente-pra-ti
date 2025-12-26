@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Presente para ti! 😘😁</title>
+    <title>Presente para ti! 😁😘</title>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💰</text></svg>">
 
@@ -23,7 +23,7 @@
             margin: 0;
             background-color: #f7f7f7;
             text-align: center;
-            overflow: hidden; /* Evita que a tela role quando o botão foge */
+            overflow: hidden;
             touch-action: manipulation;
         }
 
@@ -36,6 +36,7 @@
             width: 90%;
             z-index: 10;
             position: relative;
+            transition: all 0.3s ease;
         }
 
         #tela-pagamento {
@@ -60,7 +61,7 @@
             justify-content: center;
             align-items: center;
             position: relative;
-            height: 80px; /* Aumentado para facilitar no celular */
+            height: 120px; /* Aumentado para dar espaço ao crescimento do botão */
         }
 
         .btn {
@@ -70,16 +71,16 @@
             font-size: 1.1em;
             font-weight: bold;
             cursor: pointer;
-            transition: 0.1s;
+            transition: transform 0.2s, font-size 0.2s;
             text-decoration: none;
             display: inline-block;
-            touch-action: none; /* Importante para o botão fujão */
+            touch-action: none;
         }
 
         #btn-sim {
             background-color: #28a745;
             color: white;
-            margin-right: 60px; /* Espaço para o botão Não não sobrepor */
+            z-index: 11;
         }
 
         #btn-pagar {
@@ -92,7 +93,6 @@
             background-color: #dc3545;
             color: white;
             position: absolute;
-            right: 10%; /* Posicionamento inicial mais seguro */
         }
 
         .confetti {
@@ -132,26 +132,37 @@
         const telaPergunta = document.getElementById('tela-pergunta');
         const telaPagamento = document.getElementById('tela-pagamento');
 
-        function foge() {
-            // Calcula limites para o botão não sair totalmente da tela visível
+        let simTamanho = 1;
+        let naoTamanho = 1;
+
+        function fogeEAltera() {
+            // Fuga do botão
             const larguraTela = window.innerWidth - btnNao.offsetWidth;
             const alturaTela = window.innerHeight - btnNao.offsetHeight;
-
             const novoX = Math.random() * larguraTela;
             const novoY = Math.random() * alturaTela;
 
             btnNao.style.position = 'fixed';
             btnNao.style.left = novoX + 'px';
             btnNao.style.top = novoY + 'px';
+
+            // Faz o SIM aumentar e o NÃO diminuir
+            simTamanho += 0.2;
+            naoTamanho -= 0.05;
+
+            btnSim.style.transform = `scale(${simTamanho})`;
+            btnNao.style.transform = `scale(${naoTamanho})`;
+
+            // Se o "Não" ficar muito pequeno, ele some
+            if (naoTamanho < 0.3) {
+                btnNao.style.display = 'none';
+            }
         }
 
-        // Funciona no computador (Passar o mouse)
-        btnNao.addEventListener('mouseover', foge);
-        
-        // Funciona no celular (Encostar o dedo)
+        btnNao.addEventListener('mouseover', fogeEAltera);
         btnNao.addEventListener('touchstart', (e) => {
-            e.preventDefault(); // Impede o clique acidental
-            foge();
+            e.preventDefault();
+            fogeEAltera();
         });
 
         btnSim.addEventListener('click', () => {
@@ -170,6 +181,5 @@
             setTimeout(() => confetti.remove(), 3000);
         }
     </script>
-
 </body>
 </html>
